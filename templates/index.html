@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Kursy walut NBP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Twój CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <h1 class="mb-4">Śledzenie kursów walut (NBP)</h1>
+
+    <form method="POST" class="mb-4">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label for="currency" class="form-label">Kod waluty (ISO)</label>
+                <input type="text" id="currency" name="currency" class="form-control" maxlength="3"
+                       value="{{ rate.currency if rate else 'EUR' }}" required>
+            </div>
+            <div class="col-md-4">
+                <label for="days" class="form-label">Zakres dni (max 93)</label>
+                <input type="number" id="days" name="days" class="form-control" value="{{ days or 30 }}" min="1" max="93">
+            </div>
+            <div class="col-md-4 d-grid">
+                <button class="btn btn-primary mt-3 mt-md-0" type="submit">Sprawdź</button>
+            </div>
+        </div>
+    </form>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% elif rate %}
+        <div class="alert alert-success">
+            Kurs waluty <strong>{{ rate.currency }}</strong> wynosi <strong>{{ rate.rate }} PLN</strong>
+            <span class="text-muted">(z dnia {{ rate.date }})</span>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12 text-end">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="showMean" checked>
+                    <label class="form-check-label" for="showMean">Średnia ({{ "%.4f"|format(mean_rate) }})</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="showMedian" checked>
+                    <label class="form-check-label" for="showMedian">Mediana ({{ "%.4f"|format(median_rate) }})</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <canvas id="rateChart" height="100"></canvas>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+  // Przekazanie danych z Flask do JS
+  window.appData = {
+    labels: {{ history.dates | tojson }},
+    dataRates: {{ history.rates | tojson }},
+    minRate: {{ min_rate }},
+    maxRate: {{ max_rate }},
+    meanRate: {{ mean_rate }},
+    medianRate: {{ median_rate }},
+    currency: "{{ rate.currency if rate else '' }}"
+  };
+</script>
+
+<!-- Twój JS -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
