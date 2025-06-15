@@ -82,9 +82,9 @@ currency-rates-viewer/
 │   └── script.js        # Chart rendering and interactivity
 ├── templates/
 │   └── index.html       # HTML template with Bootstrap and Chart.js
+│
 ├── images/
 │   └── screenshot.png   # Screenshot from web application
-│
 ├── requirements.txt     # Python dependencies
 ├── README.md
 └── LICENSE
