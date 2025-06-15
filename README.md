@@ -107,8 +107,10 @@ or
 Create and activate virtual environment
 ```sh
   python -m venv venv
+
     # Windows
   venv\Scripts\activate
+
     # Linux / macOS
   source venv/bin/activate
 ```
