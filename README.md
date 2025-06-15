@@ -14,6 +14,7 @@
 - [💻 Getting Started](#getting-started)
   - [Setup](#setup)
   - [Install](#install)
+- [🚀 Demo](#demo)
 - [👥 Author](#author)
 - [🔭 Future Features](#future-features)
 - [🤝 Contributing](#contributing)
@@ -112,7 +113,6 @@ Create and activate virtual environment
   source venv/bin/activate
 ```
 
-
 ### Install
 Install dependencies:
 ```sh
@@ -132,6 +132,13 @@ View current rate and interactive historical chart with statistical markers.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- DEMO -->
+
+## 🚀 Demo <a name="demo"></a>
+
+![Demo](images/screenshot.png)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- AUTHORS -->
 
