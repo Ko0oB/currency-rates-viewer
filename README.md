@@ -76,13 +76,13 @@ currency-rates-viewer/
 │
 ├── app.py               # Flask backend logic
 │
-├── requirements.txt     # Python dependencies
 ├── static/
 │   ├── style.css        # Custom CSS styles
 │   └── script.js        # Chart rendering and interactivity
 ├── templates/
 │   └── index.html       # HTML template with Bootstrap and Chart.js
 │
+├── requirements.txt     # Python dependencies
 ├── README.md
 └── LICENSE
 ```
