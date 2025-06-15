@@ -116,13 +116,13 @@ Create and activate virtual environment
 ### Install
 Install dependencies:
 ```sh
-  python app.py
+  pip install -r requirements.txt
 ```
 
 ### Usage
 Run the Flask app:
 ```sh
-  pip install -r requirements.txt
+  python app.py
 ```
 Open your browser at http://127.0.0.1:5000 or http://localhost:5000/ 
 
