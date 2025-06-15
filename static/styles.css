@@ -1,0 +1,160 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const {
+    labels,
+    dataRates,
+    minRate,
+    maxRate,
+    meanRate,
+    medianRate,
+    currency
+  } = window.appData;
+
+  const ctx = document.getElementById('rateChart').getContext('2d');
+
+  const minIndex = dataRates.indexOf(minRate);
+  const maxIndex = dataRates.indexOf(maxRate);
+
+  const horizontalLinePlugin = {
+    id: 'horizontalLinePlugin',
+    beforeDraw: (chart) => {
+      const { ctx, chartArea: { left, right }, scales: { y } } = chart;
+      ctx.save();
+
+      [[meanRate, '#fb8c00'], [medianRate, '#4caf50']].forEach(([val, color]) => {
+        const yPos = y.getPixelForValue(val);
+        ctx.beginPath();
+        ctx.moveTo(left, yPos);
+        ctx.lineTo(right, yPos);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = color;
+        ctx.setLineDash([6, 4]);
+        ctx.stroke();
+      });
+
+      ctx.restore();
+    }
+  };
+
+  const config = {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: `Exchange Rate (${currency})`,
+          data: dataRates,
+          borderColor: '#1565c0',
+          backgroundColor: 'rgba(21, 101, 192, 0.2)',
+          fill: true,
+          tension: 0.25,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          borderWidth: 3,
+          pointBackgroundColor: context => {
+            const i = context.dataIndex;
+            if (i === minIndex) return '#f44336'; // red for min
+            if (i === maxIndex) return '#1e88e5'; // blue for max
+            return '#1565c0'; // default
+          },
+          pointBorderWidth: context => {
+            const i = context.dataIndex;
+            return (i === minIndex || i === maxIndex) ? 3 : 1;
+          }
+        },
+        {
+          label: 'Mean',
+          data: Array(dataRates.length).fill(meanRate),
+          borderColor: '#fb8c00',
+          borderDash: [8, 6],
+          fill: false,
+          hidden: false,
+          pointRadius: 0,
+          borderWidth: 2,
+        },
+        {
+          label: 'Median',
+          data: Array(dataRates.length).fill(medianRate),
+          borderColor: '#4caf50',
+          borderDash: [6, 4],
+          fill: false,
+          hidden: false,
+          pointRadius: 0,
+          borderWidth: 2,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: {
+        mode: 'nearest',
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            boxWidth: 14,
+            padding: 12,
+            font: {
+              size: 13,
+              weight: 'bold'
+            }
+          }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: context => `${context.dataset.label}: ${context.formattedValue}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            maxRotation: 45,
+            font: {
+              size: 12
+            }
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          beginAtZero: false,
+          ticks: {
+            font: {
+              size: 13
+            }
+          },
+          grid: {
+            borderDash: [4, 5]
+          }
+        }
+      }
+    },
+    plugins: [horizontalLinePlugin]
+  };
+
+  const rateChart = new Chart(ctx, config);
+
+  // Checkbox controls for toggling mean/median lines
+  const showMean = document.getElementById('showMean');
+  const showMedian = document.getElementById('showMedian');
+
+  if (showMean) {
+    showMean.addEventListener('change', () => {
+      rateChart.data.datasets[1].hidden = !showMean.checked;
+      rateChart.update();
+    });
+  }
+
+  if (showMedian) {
+    showMedian.addEventListener('change', () => {
+      rateChart.data.datasets[2].hidden = !showMedian.checked;
+      rateChart.update();
+    });
+  }
+});
