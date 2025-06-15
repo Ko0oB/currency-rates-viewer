@@ -81,7 +81,10 @@ currency-rates-viewer/
 │   ├── style.css        # Custom CSS styles
 │   └── script.js        # Chart rendering and interactivity
 └── templates/
-    └── index.html       # HTML template with Bootstrap and Chart.js
+│   └── index.html       # HTML template with Bootstrap and Chart.js
+│
+├── README.md
+└── LICENSE
 ```
 
 <!-- GETTING STARTED -->
